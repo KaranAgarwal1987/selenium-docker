@@ -1,37 +1,32 @@
- # To execute this docker-compose yml file use `docker-compose -f <file_name> up`
-# Add the `-d` flag at the end for detached execution
 version: "3"
 services:
-  selenium-hub:
-    image: selenium/hub:latest
-    container_name: selenium-hub
-    restart: always
+  hub:
+    image: selenium/hub:4.1.0
     ports:
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome-debug:latest
-    volumes:
-      - /dev/shm:/dev/shm
+    image: selenium/node-chrome:4.1.0
+    shm_size: '2g'
     depends_on:
-      - selenium-hub
+      - hub
     environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
   firefox:
-    image: selenium/node-firefox-debug:latest
-    shm_size: '1gb'
-    volumes:
-      - /dev/shm:/dev/shm
+    image: selenium/node-firefox:4.1.0
+    shm_size: '2g'
     depends_on:
-      - selenium-hub
+      - hub
     environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
   search-module:
-    image: karanagarwal1997/selenium-docker:latest
+    image: karanagarwal1987/selenium-docker:latest
     container_name: search-module
     environment:
-      - HUB_HOST=selenium-hub
+      - HUB_HOST=hub
       - MODULE=search-module.xml
     depends_on:
       - chrome
@@ -39,10 +34,10 @@ services:
     volumes:
       - ./search-result:/usr/share/udemy/test-output
   book-flight-module:
-    image: karanagarwal1997/selenium-docker:latest
+    image: karanagarwal1987/selenium-docker:latest
     container_name: book-flight-module
     environment:
-      - HUB_HOST=selenium-hub
+      - HUB_HOST=hub
       - MODULE=book-flight-module.xml
       - BROWSER=firefox
     depends_on:
