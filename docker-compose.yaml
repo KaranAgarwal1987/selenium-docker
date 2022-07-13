@@ -28,7 +28,7 @@ services:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
   search-module:
-    image: karanagarwal1997/selenium-docker
+    image: karanagarwal1997/selenium-docker:latest
     container_name: search-module
     environment:
       - HUB_HOST=selenium-hub
@@ -39,7 +39,7 @@ services:
     volumes:
       - ./search-result:/usr/share/udemy/test-output
   book-flight-module:
-    image: karanagarwal1997/selenium-docker
+    image: karanagarwal1997/selenium-docker:latest
     container_name: book-flight-module
     environment:
       - HUB_HOST=selenium-hub
